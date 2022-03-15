@@ -24,12 +24,14 @@ const News = (props) => {
     setTotalResults(parsedData.totalResults)
   }
   const fetchData = async () => {
-    setPage(page+1)
-    const data = await fetch(`https://newsapi.org/v2/top-headlines/?country=in&category=${props.category}&apiKey=${props.apikey}&page=${page}&pagesize=20`)
+    const data = await fetch(`https://newsapi.org/v2/top-headlines/?country=in&category=${props.category}&apiKey=${props.apikey}&page=${page + 1}&pagesize=20`)
+    console.log(totalResults , articles.length);
+    setPage(page + 1)
     const parsedData = await data.json()
     setArticles(articles.concat(parsedData.articles))
   }
   useEffect(() =>{
+    
     props.refrance.current.staticStart()
     document.title = 'News Monkey - ' + capitalize(props.category)
     getData()
@@ -37,13 +39,13 @@ const News = (props) => {
 
     return (
       <div>
-        <div className='container my-3'>
+        <div className='container my-3' style={{overflow : 'hidden'}}>
           <h2 className='text-primary text-center' style={{marginTop : '100px'}}>News Monkey Top Headlines - { capitalize(props.category)}</h2>
           {/* {loading && <Spinner />} */}
           <InfiniteScroll
             dataLength={articles.length}
             next={fetchData}
-            hasMore={totalResults >= articles.length}
+            hasMore={totalResults !== articles.length}
             loader={<Spinner />}
           >
             <div className="container">   
